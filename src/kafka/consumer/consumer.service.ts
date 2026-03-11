@@ -11,8 +11,9 @@ import {
   EachMessagePayload,
 } from 'kafkajs';
 import { kafkaConfig } from '../kafka.config';
-import { PendapatanStsService } from '../../pendapatan-sts/pendapatan-sts.service';
+import { AddRecordEvent } from '../../pendapatan-sts/events/add-record.event';
 import type { PendapatanStsPostedPayload } from '../dto/pendapatan-sts-posted.dto';
+import { AddReadRecordEvent } from '../../pendapatan-sts/events/add-read-record.event';
 
 /**
  * Consumer Kafka dengan kafkajs (sesuai modul).
@@ -24,7 +25,10 @@ export class ConsumerService implements OnModuleInit, OnModuleDestroy {
   private kafka: Kafka;
   private consumer: Consumer;
 
-  constructor(private readonly pendapatanStsService: PendapatanStsService) {
+  constructor(
+    private readonly addRecordEvent: AddRecordEvent,
+    private readonly addReadRecordEvent: AddReadRecordEvent,
+  ) {
     this.kafka = new Kafka({
       clientId: kafkaConfig.clientId,
       brokers: kafkaConfig.brokers,
@@ -67,9 +71,7 @@ export class ConsumerService implements OnModuleInit, OnModuleDestroy {
 
     try {
       const eventData: PendapatanStsPostedPayload = JSON.parse(value ?? '{}');
-      this.logger.debug(
-        `📦 Event data: ${JSON.stringify(eventData, null, 2)}`,
-      );
+      this.logger.debug(`📦 Event data: ${JSON.stringify(eventData, null, 2)}`);
 
       if (
         eventData.id_sts == null ||
@@ -82,7 +84,8 @@ export class ConsumerService implements OnModuleInit, OnModuleDestroy {
         return;
       }
 
-      this.pendapatanStsService.addRecord(eventData);
+      await this.addRecordEvent.handle(eventData);
+      await this.addReadRecordEvent.handle(eventData);
       this.logger.log(
         `✅ Record added: id_sts=${eventData.id_sts}, no_sts=${eventData.no_sts}, total=${eventData.total}`,
       );

@@ -3,9 +3,34 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { KafkaModule } from './kafka/kafka.module';
 import { PendapatanStsModule } from './pendapatan-sts/pendapatan-sts.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports: [KafkaModule, PendapatanStsModule],
+  imports: [
+    KafkaModule,
+    PendapatanStsModule,
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: 'localhost',
+      port: 5432,
+      username: 'iqbalrofindi',
+      password: '',
+      database: 'report_write',
+      autoLoadEntities: true,
+      synchronize: true,
+    }),
+    TypeOrmModule.forRoot({
+      name: 'report_read',
+      type: 'postgres',
+      host: 'localhost',
+      port: 5432,
+      username: 'iqbalrofindi',
+      password: '',
+      database: 'report_read',
+      autoLoadEntities: true,
+      synchronize: true,
+    }),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
