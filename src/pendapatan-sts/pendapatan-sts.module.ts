@@ -8,8 +8,8 @@ import { AddReadRecordEvent } from './events/add-read-record.event';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([PendapatanStsEntity]),
-    TypeOrmModule.forFeature([PendapatanStsEntity], 'report_read'),
+    TypeOrmModule.forFeature([PendapatanStsEntity], 'reporting'),
+    TypeOrmModule.forFeature([PendapatanStsEntity], 'reporting_read'),
   ],
   controllers: [PendapatanStsController],
   providers: [PendapatanStsService, AddRecordEvent, AddReadRecordEvent],

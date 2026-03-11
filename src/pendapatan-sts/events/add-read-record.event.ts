@@ -8,7 +8,7 @@ import type { PendapatanStsPostedPayload } from '../../kafka/dto/pendapatan-sts-
 @Injectable()
 export class AddReadRecordEvent {
   constructor(
-    @InjectRepository(PendapatanStsEntity)
+    @InjectRepository(PendapatanStsEntity, 'reporting_read')
     private readonly readRepository: Repository<PendapatanStsEntity>,
   ) {}
 

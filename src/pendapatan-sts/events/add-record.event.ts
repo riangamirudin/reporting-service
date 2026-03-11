@@ -10,7 +10,7 @@ import { ConsumerService } from '../../kafka/consumer/consumer.service';
 export class AddRecordEvent {
   private readonly logger = new Logger(ConsumerService.name);
   constructor(
-    @InjectRepository(PendapatanStsEntity)
+    @InjectRepository(PendapatanStsEntity, 'reporting')
     private readonly writeRepository: Repository<PendapatanStsEntity>,
   ) {}
 
