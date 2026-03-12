@@ -10,21 +10,21 @@ export class PendapatanStsController {
   constructor(private readonly pendapatanStsService: PendapatanStsService) {}
 
   @Get()
-  getAll(): PendapatanStsRecord[] {
+  async getAll(): Promise<PendapatanStsRecord[]> {
     return this.pendapatanStsService.getAllRecords();
   }
 
   @Get('by-id/:id_sts')
-  getByIdSts(
+  async getByIdSts(
     @Param('id_sts', ParseIntPipe) idSts: number,
-  ): PendapatanStsRecord | undefined {
+  ): Promise<PendapatanStsRecord | undefined> {
     return this.pendapatanStsService.getRecordByIdSts(idSts);
   }
 
   @Get('by-no/:no_sts')
-  getByNoSts(
+  async getByNoSts(
     @Param('no_sts') noSts: string,
-  ): PendapatanStsRecord | undefined {
+  ): Promise<PendapatanStsRecord | undefined> {
     return this.pendapatanStsService.getRecordByNoSts(noSts);
   }
 }
